@@ -1,0 +1,24 @@
+<schemalist gettext-domain="gnome-shell-extensions">
+	<schema id="org.gnome.shell.extensions.sincrodirs" path="/org/gnome/shell/extensions/sincrodirs/">
+		<key name="group-source-destination" type="as">
+			<default>[]</default>
+			<summary>Group, source, destination array</summary>
+			<description>An array of groups, source folders and destination folders. Each element of the array contains the group, a list of source folders and a destination folder: ['group1;source1|source2|...|sourcen;destination1','group2;source1|source2|...|sourcen;destination2',...]</description>
+		</key>
+		<key name="enabled-groups" type="as">
+			<default>[]</default>
+			<summary>Enabled groups</summary>
+			<description>Contains the groups enabled to make a synchronization</description>
+		</key>
+		<key name="last-sync" type="s">
+			<default>""</default>
+			<summary>Last synchronization</summary>
+			<description>Date of the last synchronization (dd/mm/yyyy)</description>
+		</key>
+		<key name="last-errors" type="as">
+			<default>[]</default>
+			<summary>Last errors</summary>
+			<description>Last errors of the last synchronization. If empty, no errors</description>
+		</key>
+	</schema>
+</schemalist>
