@@ -159,7 +159,7 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 		
 		let groupsList = Gsd.getGroups(_settings.get_strv(SETTINGS_GROUP_SOURCE_DESTINATION));
 		if (groupsList.length == 0) {   // if there isn't any folder, messages + config button
-			this.menu.addMenuItem(new Widgets.LabelWidget(_("There's no folders to sincronize!"),"errorText"));
+			this.menu.addMenuItem(new Widgets.LabelWidget(_("There's no folders to synchronize!"),"errorText"));
 			this.menu.addMenuItem(new Widgets.LabelWidget(_("Please, add folders in options menu."),"normalText"));
 			this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 			this.menu.addMenuItem(new ConfigButton());
@@ -209,15 +209,11 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 	},
 	
 	_toogleStatusGroup : function(groupSwitch, state, group) {
+		let enabledGroups = _settings.get_strv(SETTINGS_ENABLED_GROUPS);
+		
 		if (state == true) {
-			let enabledGroups = _settings.get_strv(SETTINGS_ENABLED_GROUPS);
-			
 			enabledGroups.push(group);
-
-			_settings.set_strv(SETTINGS_ENABLED_GROUPS, enabledGroups);
 		} else {
-				let enabledGroups = _settings.get_strv(SETTINGS_ENABLED_GROUPS);
-				
 				let i = enabledGroups.indexOf(group);
 				if (i == 0) {
 					enabledGroups.shift();
@@ -226,9 +222,9 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 					let after = enabledGroups.slice(i + 1);
 					enabledGroups = before.concat(after);
 				}
-
-				_settings.set_strv(SETTINGS_ENABLED_GROUPS, enabledGroups);
 		}
+		
+		_settings.set_strv(SETTINGS_ENABLED_GROUPS, enabledGroups);
 	},
 	
 	destroy : function() {
