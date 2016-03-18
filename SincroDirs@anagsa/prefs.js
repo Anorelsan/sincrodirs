@@ -359,7 +359,7 @@ const SincroDirsSettingsWidget = new GObject.Class({
 });
 
 function init(){
-	//Convenience.initTranslations();
+	Convenience.initTranslations();
 }
 
 function buildPrefsWidget(){

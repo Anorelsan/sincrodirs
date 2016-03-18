@@ -1,7 +1,7 @@
 /* -*- Mode: js2; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
  * extension.js
- * Copyright (C) 2016 Antonio Aguilar (Anagsa) <>
+ * Copyright (C) 2016 Antonio Aguilar <>
  * 
  * SincroDirs is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -75,7 +75,7 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 				if (groupDestination != "") {   // some destination ...
 					for (var j = 0; j < groupSources.length; j++) {
 						if (groupSources[j] != "") {	// and some sources ...
-							let [res, pid, in_fd, out_fd, err_fd] = GLib.spawn_async_with_pipes(null, [rsyncPath, '-a', groupSources[j], groupDestination], null, 0, null);
+							let [res, pid, in_fd, out_fd, err_fd] = GLib.spawn_async_with_pipes(null, [rsyncPath, '-rlptv', groupSources[j], groupDestination], null, 0, null);
 						
 							let error_reader = new Gio.DataInputStream({
 								base_stream: new Gio.UnixInputStream({fd: err_fd})
@@ -252,7 +252,7 @@ function applyChanges() {   // reload the indicator when settings change
 
 function init() {
 	_settings = Convenience.getSettings();
-	//Convenience.initTranslations();
+	Convenience.initTranslations();
 }
 
 function enable() {
