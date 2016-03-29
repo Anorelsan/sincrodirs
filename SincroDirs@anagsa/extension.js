@@ -65,6 +65,7 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 		let enabledGroups = _settings.get_strv(SETTINGS_ENABLED_GROUPS);
 		let groupSourceDestination = _settings.get_strv(SETTINGS_GROUP_SOURCE_DESTINATION);
 		let errors = [];
+		_settings.set_strv(SETTINGS_LAST_ERRORS, errors);
 		let rsyncPath = GLib.find_program_in_path("rsync");
 
 		if (rsyncPath != null) {
@@ -88,11 +89,10 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 			}
 		} else {
 			errors.push(_("rsync not found!"));
+			_settings.set_strv(SETTINGS_LAST_ERRORS, errors);
 		}
 		
-		_settings.set_strv(SETTINGS_LAST_ERRORS, errors);
-		
-		let date = new GLib.Date(); // Update the last-sync date after syncro
+		let date = new GLib.Date(); // Update the last-sync date after synchro
 		let time = new GLib.TimeVal();
 		GLib.get_current_time(time);
 		date.set_time_val(time);
@@ -109,7 +109,7 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 function _readError (gobject, async_res, user_data) {   // function needed por read_line_async callback
 	let [lineout, charlength, error] = gobject.read_line_finish(async_res);
 	let err = lineout;
-	let errors = _settings.get_strv(SETTINGS_LAST_ERRORS);;
+	let errors = _settings.get_strv(SETTINGS_LAST_ERRORS);
 	
 	if (err != null) {
 		let start = err.toString().indexOf("failed: ");
