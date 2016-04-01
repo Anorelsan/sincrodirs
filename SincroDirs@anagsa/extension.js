@@ -71,7 +71,7 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 
 		if (rsyncPath != null) {	
 			//Start notification
-			Main.notify("Sincrodirs",_("Start synchronization"));
+			Main.notify("SincroDirs",_("Start synchronization"));
 			
 			this._totalChilds = 0;
 			this._childsEnded = 0;  //to count childs with childWatch
@@ -102,9 +102,9 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 									//End notification
 									let endErrors = _settings.get_strv(SETTINGS_LAST_ERRORS);
 									if (endErrors.length == 0) {
-										Main.notify("Sincrodirs",_("Synchronization ended"));
+										Main.notify("SincroDirs",_("Synchronization ended"));
 									} else {
-										Main.notify("Sincrodirs",_("Synchronization ended with errors!"));
+										Main.notify("SincroDirs",_("Synchronization ended with errors!"));
 									}
 								}
 								
@@ -119,7 +119,7 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 			errors.push(_("rsync not found!"));
 			_settings.set_strv(SETTINGS_LAST_ERRORS, errors);
 			
-			Main.notify("Sincrodirs",_("rsync not found!"));
+			Main.notify("SincroDirs",_("rsync not found!"));
 		}
 		
 		let date = new GLib.Date(); // Update the last-sync date after synchro
