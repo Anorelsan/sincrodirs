@@ -24,7 +24,6 @@ const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const GLib = imports.gi.GLib;
 const Gio = imports.gi.Gio;
-const Notify = imports.gi.Notify;
 
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Widgets = Me.imports.widgets;
