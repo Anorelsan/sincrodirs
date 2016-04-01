@@ -24,6 +24,7 @@ const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const GLib = imports.gi.GLib;
 const Gio = imports.gi.Gio;
+const Notify = imports.gi.Notify;
 
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Widgets = Me.imports.widgets;
@@ -64,11 +65,21 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 	_sincroDir : function() {
 		let enabledGroups = _settings.get_strv(SETTINGS_ENABLED_GROUPS);
 		let groupSourceDestination = _settings.get_strv(SETTINGS_GROUP_SOURCE_DESTINATION);
-		let errors = [];
-		_settings.set_strv(SETTINGS_LAST_ERRORS, errors);
 		let rsyncPath = GLib.find_program_in_path("rsync");
+		let errors = [];
+		
+		_settings.set_strv(SETTINGS_LAST_ERRORS, errors);
 
-		if (rsyncPath != null) {
+		if (rsyncPath != null) {	
+			//Start notification
+			Main.notify("Sincrodirs",_("Start synchronization"));
+			
+			this._totalChilds = 0;
+			this._childsEnded = 0;  //to count childs with childWatch
+			
+			this._errorReader = new Array();
+			this._childWatch = new Array(); //arrays to track the childs and the error stream
+			
 			for (var i = 0; i < enabledGroups.length; i++) {
 				let groupSources = Gsd.getSourceFolders(groupSourceDestination, enabledGroups[i]);
 				let groupDestination = Gsd.getDestinationFolder(groupSourceDestination, enabledGroups[i]);
@@ -76,13 +87,31 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 				if (groupDestination != "") {   // some destination ...
 					for (var j = 0; j < groupSources.length; j++) {
 						if (groupSources[j] != "") {	// and some sources ...
+							this._totalChilds ++;   // counts the number of children, but also is a index to indentify them
 							let [res, pid, in_fd, out_fd, err_fd] = GLib.spawn_async_with_pipes(null, [rsyncPath, '-rlptv', groupSources[j], groupDestination], null, 0, null);
 						
-							let error_reader = new Gio.DataInputStream({
+							this._errorReader[this._totalChilds] = new Gio.DataInputStream({
 								base_stream: new Gio.UnixInputStream({fd: err_fd})
 							});
 							
-							error_reader.read_line_async(0, null, _readError);
+							this._errorReader[this._totalChilds].read_line_async(0, null, readError);
+							
+							this._childWatch[this._totalChilds] = GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, Lang.bind(this, function(childWatch, state, nChild) {
+								this._childsEnded++;
+								
+								if (this._totalChilds == this._childsEnded) {
+									//End notification
+									let endErrors = _settings.get_strv(SETTINGS_LAST_ERRORS);
+									if (endErrors.length == 0) {
+										Main.notify("Sincrodirs",_("Synchronization ended"));
+									} else {
+										Main.notify("Sincrodirs",_("Synchronization ended with errors!"));
+									}
+								}
+								
+								GLib.source_remove(this._childWatch[nChild]);
+								this._errorReader[nChild].close(null);
+							}, this._totalChilds));
 						}
 					}
 				}
@@ -90,6 +119,8 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 		} else {
 			errors.push(_("rsync not found!"));
 			_settings.set_strv(SETTINGS_LAST_ERRORS, errors);
+			
+			Main.notify("Sincrodirs",_("rsync not found!"));
 		}
 		
 		let date = new GLib.Date(); // Update the last-sync date after synchro
@@ -106,7 +137,7 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 	}
 });
 
-function _readError (gobject, async_res, user_data) {   // function needed por read_line_async callback
+function readError (gobject, async_res, user_data) {   // function needed por read_line_async callback
 	let [lineout, charlength, error] = gobject.read_line_finish(async_res);
 	let err = lineout;
 	let errors = _settings.get_strv(SETTINGS_LAST_ERRORS);

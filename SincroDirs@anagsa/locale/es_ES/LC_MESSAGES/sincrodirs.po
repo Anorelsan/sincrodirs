@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-17 19:57+0100\n"
-"PO-Revision-Date: 2016-03-17 20:06+0100\n"
+"POT-Creation-Date: 2016-04-01 16:54+0200\n"
+"PO-Revision-Date: 2016-04-01 17:00+0200\n"
 "Last-Translator: Antonio Aguilar <povale69@gmail.com>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -19,35 +19,48 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.8.7.1\n"
 
-#: extension.js:90
+#: extension.js:75
+msgid "Start synchronization"
+msgstr "Empieza la sincronización"
+
+#: extension.js:107
+msgid "Synchronization ended"
+msgstr "La sincronización ha finalizado"
+
+#: extension.js:109
+msgid "Synchronization ended with errors!"
+msgstr "¡La sincronización ha terminado con errores!"
+
+#: extension.js:123 extension.js:126
 msgid "rsync not found!"
 msgstr "¡No se encuentra el rsync!"
 
-#: extension.js:162
-msgid "There's no folders to sincronize!"
+#: extension.js:196
+#, fuzzy
+msgid "There's no folders to synchronize!"
 msgstr "¡No hay directorios que sincronizar!"
 
-#: extension.js:163
+#: extension.js:197
 msgid "Please, add folders in options menu."
 msgstr "Por favor, añade directorios en el menú de opciones."
 
-#: extension.js:167
+#: extension.js:201
 msgid "GROUPS"
 msgstr "GRUPOS"
 
-#: extension.js:177
+#: extension.js:211
 msgid "Last synchronization:"
 msgstr "Última sincronización:"
 
-#: extension.js:180
+#: extension.js:214
 msgid "No synchronization yet!"
 msgstr "¡Aún no se ha sincronizado!"
 
-#: extension.js:184
+#: extension.js:218
 msgid "Last errors:"
 msgstr "Últimos errores:"
 
-#: extension.js:187
+#: extension.js:221
 msgid "No errors"
 msgstr "Sin errores"
 
