@@ -20,5 +20,25 @@
 			<summary>Last errors</summary>
 			<description>Last errors of the last synchronization. If empty, no errors</description>
 		</key>
+		<key name="custom-options" type="b">
+			<default>false</default>
+			<summary>Custom or modify options</summary>
+			<description>Custom or modify options</description>
+		</key>
+		<key name="delete" type="b">
+			<default>false</default>
+			<summary>Delete option in rsync</summary>
+			<description>Delete option in rsync</description>
+		</key>
+		<key name="compress" type="b">
+			<default>false</default>
+			<summary>Compress option in rsync</summary>
+			<description>Compress option in rsync</description>
+		</key>
+		<key name="custom-rsync" type="s">
+			<default>""</default>
+			<summary>Custom options for rsync</summary>
+			<description>Custom options for rsync</description>
+		</key>
 	</schema>
 </schemalist>

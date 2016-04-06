@@ -23,6 +23,10 @@ const Columns = {
 
 const SETTINGS_GROUP_SOURCE_DESTINATION = 'group-source-destination';
 const SETTINGS_ENABLED_GROUPS = 'enabled-groups';
+const SETTINGS_CUSTOM_OPTIONS = 'custom-options';
+const SETTINGS_DELETE = 'delete';
+const SETTINGS_COMPRESS = 'compress';
+const SETTINGS_CUSTOM_RSYNC = 'custom-rsync';
 
 const SincroDirsSettingsWidget = new GObject.Class({
 	Name: 'SincroDirs.prefs.SincroDirsSettingsWidget',
@@ -44,6 +48,93 @@ const SincroDirsSettingsWidget = new GObject.Class({
 			column_spacing: 6,
 			row_spacing: 6 
 		});
+		
+		// Create options label and radio options, modify options or custom options
+		let optionsLabel = new Gtk.Label ({
+			label: '<b>' + _("Options") + '</b>',
+			use_markup: true,
+			halign: Gtk.Align.START,
+			margin_top: 20
+		});
+		grid.add (optionsLabel);
+		
+		// Modify options
+		this._modifyOptionsRadio = new Gtk.RadioButton ({
+			label: _("Modify rsync options"),
+			valign: Gtk.Align.START
+		});
+		this._modifyOptionsRadio.connect('toggled', Lang.bind(this, function(widget) {
+			if (widget.active) {
+				optionsDeleteCheck.set_sensitive(true);
+				optionsCompressCheck.set_sensitive(true);
+				
+				this._customEntry.set_sensitive(false);
+				customOptionsButton.set_sensitive(false);
+				
+				this._settings.set_boolean(SETTINGS_CUSTOM_OPTIONS, false);
+			}
+		}));
+		
+		let optionsDeleteCheck = new Gtk.CheckButton ({
+			label: _("Delete")
+			});
+		this._settings.bind(SETTINGS_DELETE, optionsDeleteCheck, 'active', Gio.SettingsBindFlags.DEFAULT);
+		
+		let optionsCompressCheck = new Gtk.CheckButton ({
+			label: _("Compress")
+		});
+		this._settings.bind(SETTINGS_COMPRESS, optionsCompressCheck, 'active', Gio.SettingsBindFlags.DEFAULT);
+		
+		// Attach radio, checks to the grid
+		grid.add (this._modifyOptionsRadio);
+		grid.add (optionsDeleteCheck);
+		grid.add (optionsCompressCheck);
+		
+		// Custom options
+		this._customOptionsRadio = new Gtk.RadioButton ({
+			group: this._modifyOptionsRadio,
+			label: _("Custom rsync options"),
+			valign: Gtk.Align.START
+		});
+		this._customOptionsRadio.connect('toggled', Lang.bind(this, function(widget) {
+			if (widget.active) {
+				this._customEntry.set_sensitive(true);
+				customOptionsButton.set_sensitive(true);
+				
+				optionsDeleteCheck.set_sensitive(false);
+				optionsCompressCheck.set_sensitive(false);
+				
+				this._settings.set_boolean(SETTINGS_CUSTOM_OPTIONS, true);
+			}
+		}));
+		
+		this._customEntry = new Gtk.Entry ({
+			hexpand: true,
+			editable: true 
+		});
+		this._customEntry.set_sensitive(false);	// The entry box must be disabled by default
+		
+		let customOptionsButton = new Gtk.Button({
+			label: _("Set")
+		});
+		customOptionsButton.set_sensitive(false);	// The option's button must be disabled by default
+		customOptionsButton.connect('clicked', Lang.bind(this, function() {
+			let customRsync = this._customEntry.get_text();
+			this._settings.set_string(SETTINGS_CUSTOM_RSYNC, customRsync);
+		}));
+		
+		// Create custom grid and attach radio & entry
+		let customOptionsgrid = new Gtk.Grid ({
+			orientation: Gtk.Orientation.HORIZONTAL,
+			column_spacing: 6,
+			row_spacing: 6 
+		});
+		
+		customOptionsgrid.add (this._customEntry);
+		customOptionsgrid.add (customOptionsButton);
+		
+		grid.add (this._customOptionsRadio);
+		grid.add (customOptionsgrid);
 		
 		// Create source label, tree, toolbar & buttons
 		let sourceLabel = new Gtk.Label ({
@@ -333,7 +424,17 @@ const SincroDirsSettingsWidget = new GObject.Class({
 	},
 	
 	_refresh: function() {
+		let customRsync = this._settings.get_string(SETTINGS_CUSTOM_RSYNC);
+		let customOptions = this._settings.get_boolean(SETTINGS_CUSTOM_OPTIONS);
 		let groupsList = Gsd.getGroups(this._settings.get_strv(SETTINGS_GROUP_SOURCE_DESTINATION));
+		
+		this._customEntry.set_text(customRsync);
+		
+		if (customOptions) {
+			this._customOptionsRadio.active = true;
+		} else {
+			this._modifyOptionsRadio.active = true;
+		}
 		
 		this._sourceStore.clear();
 		this._destinationStore.clear();

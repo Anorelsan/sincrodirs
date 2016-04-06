@@ -37,6 +37,10 @@ const SETTINGS_GROUP_SOURCE_DESTINATION = 'group-source-destination';
 const SETTINGS_ENABLED_GROUPS = 'enabled-groups';
 const SETTINGS_LAST_SYNC = 'last-sync';
 const SETTINGS_LAST_ERRORS = 'last-errors';
+const SETTINGS_CUSTOM_OPTIONS = 'custom-options';
+const SETTINGS_DELETE = 'delete';
+const SETTINGS_COMPRESS = 'compress';
+const SETTINGS_CUSTOM_RSYNC = 'custom-rsync';
 
 let _settings;
 let _indicator;
@@ -87,7 +91,32 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 					for (var j = 0; j < groupSources.length; j++) {
 						if (groupSources[j] != "") {	// and some sources ...
 							this._totalChilds ++;   // counts the number of children, but also is a index to indentify them
-							let [res, pid, in_fd, out_fd, err_fd] = GLib.spawn_async_with_pipes(null, [rsyncPath, '-rlptv', groupSources[j], groupDestination], null, 0, null);
+							
+							let rsyncOptions = '-rlptq';	// rsync options and ...
+							let customOptions = _settings.get_boolean(SETTINGS_CUSTOM_OPTIONS);
+							
+							if (customOptions) {	// custom options
+								rsyncOptions = _settings.get_string(SETTINGS_CUSTOM_RSYNC);
+							} else {
+								let deleteOption = _settings.get_boolean(SETTINGS_DELETE);
+								let compressOption = _settings.get_boolean(SETTINGS_COMPRESS);
+								
+								if (deleteOption && !compressOption) {
+									rsyncOptions = rsyncOptions.concat(' --delete');
+								} else if (!deleteOption && compressOption) {
+									rsyncOptions = rsyncOptions.concat('z');
+								} else if (deleteOption && compressOption) {
+									rsyncOptions = rsyncOptions.concat ('z --delete');
+								}
+							}
+							
+							let argv = [];  // an array for spawn_async with...
+							argv.push(rsyncPath);   //rsync path...
+							argv = argv.concat(rsyncOptions.split(" "));	//and all it's options
+							argv.push(groupSources[j]);
+							argv.push(groupDestination);
+							
+							let [res, pid, in_fd, out_fd, err_fd] = GLib.spawn_async_with_pipes(null, argv, null, 0, null);
 						
 							this._errorReader[this._totalChilds] = new Gio.DataInputStream({
 								base_stream: new Gio.UnixInputStream({fd: err_fd})
