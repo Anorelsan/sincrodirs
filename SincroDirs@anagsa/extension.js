@@ -101,14 +101,13 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 								let deleteOption = _settings.get_boolean(SETTINGS_DELETE);
 								let compressOption = _settings.get_boolean(SETTINGS_COMPRESS);
 								
-								if (deleteOption && !compressOption) {
-									rsyncOptions = rsyncOptions.concat(' --delete');
-								} else if (!deleteOption && compressOption) {
+								if (compressOption) {   // first the options with a letter
 									rsyncOptions = rsyncOptions.concat('z');
-								} else if (deleteOption && compressOption) {
-									rsyncOptions = rsyncOptions.concat ('z --delete');
 								}
-							}
+								if (deleteOption) { // last the options with word
+									rsyncOptions = rsyncOptions.concat(' --delete');
+								}
+							}   // now we have a correct rsync options string
 							
 							let argv = [];  // an array for spawn_async with...
 							argv.push(rsyncPath);   //rsync path...
