@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-04-06 20:39+0200\n"
-"PO-Revision-Date: 2016-04-06 20:48+0200\n"
+"PO-Revision-Date: 2016-04-08 14:36+0200\n"
 "Last-Translator: Antonio Aguilar <povale69@gmail.com>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -36,7 +36,6 @@ msgid "rsync not found!"
 msgstr "¡No se encuentra el rsync!"
 
 #: extension.js:221
-#, fuzzy
 msgid "There's no folders to synchronize!"
 msgstr "¡No hay directorios que sincronizar!"
 
