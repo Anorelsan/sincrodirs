@@ -34,7 +34,7 @@ Next you can add groups of folders to synchronize, add folders to the groups and
 
 ![](https://github.com/Khudsa/sincrodirs/blob/master/_screenshots/5.png)
 
-If you have configured the extension, now you can click again on the extension icon to view the groups to synchronize and some information of the last synchronization. You can click on the switch button to activate/deactivate that group synchronization.
+If you have configured the extension, now you can click again on the extension icon to view the groups to synchronize and some information of the last synchronization. You can click on the switch button to activate/deactivate that group synchronization. And the play button to synchronize.
 
 ![](https://github.com/Khudsa/sincrodirs/blob/master/_screenshots/6.png)
 
