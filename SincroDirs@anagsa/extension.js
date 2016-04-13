@@ -115,7 +115,7 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 							argv.push(groupSources[j]);
 							argv.push(groupDestination);
 							
-							let [res, pid, in_fd, out_fd, err_fd] = GLib.spawn_async_with_pipes(null, argv, null, 0, null);
+							let [res, pid, in_fd, out_fd, err_fd] = GLib.spawn_async_with_pipes(null, argv, null, GLib.SpawnFlags.DO_NOT_REAP_CHILD, null);
 						
 							this._errorReader[this._totalChilds] = new Gio.DataInputStream({
 								base_stream: new Gio.UnixInputStream({fd: err_fd})
