@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-06 20:39+0200\n"
-"PO-Revision-Date: 2016-04-08 14:36+0200\n"
+"POT-Creation-Date: 2016-04-19 20:22+0200\n"
+"PO-Revision-Date: 2016-04-20 16:48+0200\n"
 "Last-Translator: Antonio Aguilar <povale69@gmail.com>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -23,106 +23,110 @@ msgstr ""
 msgid "Start synchronization"
 msgstr "Empieza la sincronización"
 
-#: extension.js:134
+#: extension.js:133
 msgid "Synchronization ended"
 msgstr "La sincronización ha finalizado"
 
-#: extension.js:136
+#: extension.js:135
 msgid "Synchronization ended with errors!"
 msgstr "¡La sincronización ha terminado con errores!"
 
-#: extension.js:148 extension.js:151
+#: extension.js:147 extension.js:150
 msgid "rsync not found!"
 msgstr "¡No se encuentra el rsync!"
 
-#: extension.js:221
+#: extension.js:220
 msgid "There's no folders to synchronize!"
 msgstr "¡No hay directorios que sincronizar!"
 
-#: extension.js:222
+#: extension.js:221
 msgid "Please, add folders in options menu."
 msgstr "Por favor, añade directorios en el menú de opciones."
 
-#: extension.js:226
+#: extension.js:225
 msgid "GROUPS"
 msgstr "GRUPOS"
 
-#: extension.js:236
+#: extension.js:235
 msgid "Last synchronization:"
 msgstr "Última sincronización:"
 
-#: extension.js:239
+#: extension.js:238
 msgid "No synchronization yet!"
 msgstr "¡Aún no se ha sincronizado!"
 
-#: extension.js:243
+#: extension.js:242
 msgid "Last errors:"
 msgstr "Últimos errores:"
 
-#: extension.js:246
+#: extension.js:245
 msgid "No errors"
 msgstr "Sin errores"
 
-#: prefs.js:54
-msgid "Options"
-msgstr "Opciones"
-
-#: prefs.js:63
-msgid "Modify rsync options"
-msgstr "Modificar las opciones de rsync"
-
-#: prefs.js:79
-msgid "Delete"
-msgstr ""
-
-#: prefs.js:84
-msgid "Compress"
-msgstr ""
-
-#: prefs.js:96
-msgid "Custom rsync options"
-msgstr "Personalizar las opciones de rsync"
-
-#: prefs.js:118
-msgid "Set"
-msgstr "Establecer"
-
-#: prefs.js:141
+#: prefs.js:55
 msgid "Source"
 msgstr "Origen"
 
-#: prefs.js:162 prefs.js:247
+#: prefs.js:76 prefs.js:161
 msgid "Groups"
 msgstr "Grupos"
 
-#: prefs.js:177 prefs.js:262
+#: prefs.js:91 prefs.js:176 prefs.js:311
 msgid "Folders"
 msgstr "Directorios"
 
-#: prefs.js:194
+#: prefs.js:108
 msgid "Add group"
 msgstr "Añadir grupo"
 
-#: prefs.js:201
+#: prefs.js:115
 msgid "Add folder"
 msgstr "Añadir directorio"
 
-#: prefs.js:208
+#: prefs.js:122
 msgid "Remove group or folder"
 msgstr "Eliminar grupo o directorio"
 
-#: prefs.js:226
+#: prefs.js:140
 msgid "Destination"
 msgstr "Destino"
 
-#: prefs.js:279
+#: prefs.js:193
 msgid "Add/Change folder"
 msgstr "Añadir/Cambiar directorio"
 
-#: prefs.js:316
+#: prefs.js:215
+msgid "Rsync options"
+msgstr "Opciones del rsync"
+
+#: prefs.js:224
+msgid "Modify rsync options"
+msgstr "Modificar las opciones del rsync"
+
+#: prefs.js:240
+msgid "Delete"
+msgstr ""
+
+#: prefs.js:245
+msgid "Compress"
+msgstr ""
+
+#: prefs.js:257
+msgid "Custom rsync options"
+msgstr "Personalizar las opciones del rsync"
+
+#: prefs.js:279
+msgid "Set"
+msgstr "Establecer"
+
+#: prefs.js:304
+msgid "Options"
+msgstr "Opciones"
+
+#: prefs.js:345
 msgid "Add"
 msgstr "Añadir"
 
-#: prefs.js:349 prefs.js:403
+#: prefs.js:378 prefs.js:432
 msgid "Select folder"
 msgstr "Seleccionar directorio"
