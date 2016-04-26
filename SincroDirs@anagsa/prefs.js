@@ -27,6 +27,15 @@ const SETTINGS_CUSTOM_OPTIONS = 'custom-options';
 const SETTINGS_DELETE = 'delete';
 const SETTINGS_COMPRESS = 'compress';
 const SETTINGS_CUSTOM_RSYNC = 'custom-rsync';
+const SETTINGS_MONDAY = 'monday';
+const SETTINGS_TUESDAY = 'tuesday';
+const SETTINGS_WEDNESDAY = 'wednesday';
+const SETTINGS_THURSDAY = 'thursday';
+const SETTINGS_FRIDAY = 'friday';
+const SETTINGS_SATURDAY = 'saturday';
+const SETTINGS_SUNDAY = 'sunday';
+const SETTINGS_HOUR = 'hour';
+const SETTINGS_MINUTES = 'minutes';
 
 const SincroDirsSettingsWidget = new GObject.Class({
 	Name: 'SincroDirs.prefs.SincroDirsSettingsWidget',
@@ -297,6 +306,117 @@ const SincroDirsSettingsWidget = new GObject.Class({
 		optionsTab.add (this._customOptionsRadio);
 		optionsTab.add (customOptionsgrid);
 		
+		// Schedule options
+		let scheduleOptionsLabel = new Gtk.Label ({
+			label: '<b>' + _("Schedule options") + '</b>',
+			use_markup: true,
+			halign: Gtk.Align.START,
+			margin_top: 20
+		});
+		optionsTab.add (scheduleOptionsLabel);
+		
+		let scheduleMessage = new Gtk.Label ({
+			label: _("Repeat every:"),
+			halign: Gtk.Align.START,
+		});
+		optionsTab.add (scheduleMessage);
+		
+		let scheduleMonday = new Gtk.CheckButton ({
+			label: _("Monday")
+			});
+		this._settings.bind(SETTINGS_MONDAY, scheduleMonday, 'active', Gio.SettingsBindFlags.DEFAULT);
+		
+		let scheduleTuesday = new Gtk.CheckButton ({
+			label: _("Tuesday")
+			});
+		this._settings.bind(SETTINGS_TUESDAY, scheduleTuesday, 'active', Gio.SettingsBindFlags.DEFAULT);
+		
+		let scheduleWednesday = new Gtk.CheckButton ({
+			label: _("Wednesday")
+			});
+		this._settings.bind(SETTINGS_WEDNESDAY, scheduleWednesday, 'active', Gio.SettingsBindFlags.DEFAULT);
+		
+		let scheduleThursday = new Gtk.CheckButton ({
+			label: _("Thursday")
+			});
+		this._settings.bind(SETTINGS_THURSDAY, scheduleThursday, 'active', Gio.SettingsBindFlags.DEFAULT);
+		
+		let scheduleFriday = new Gtk.CheckButton ({
+			label: _("Friday")
+			});
+		this._settings.bind(SETTINGS_FRIDAY, scheduleFriday, 'active', Gio.SettingsBindFlags.DEFAULT);
+		
+		let scheduleSaturday = new Gtk.CheckButton ({
+			label: _("Saturday")
+			});
+		this._settings.bind(SETTINGS_SATURDAY, scheduleSaturday, 'active', Gio.SettingsBindFlags.DEFAULT);
+		
+		let scheduleSunday = new Gtk.CheckButton ({
+			label: _("Sunday")
+			});
+		this._settings.bind(SETTINGS_SUNDAY, scheduleSunday, 'active', Gio.SettingsBindFlags.DEFAULT);
+		
+		// Create custom grid and attach the check buttons
+		let customSchedulegrid = new Gtk.Grid ({
+			orientation: Gtk.Orientation.HORIZONTAL,
+			column_spacing: 6,
+			row_spacing: 6 
+		});
+		
+		customSchedulegrid.add(scheduleMonday);
+		customSchedulegrid.add(scheduleTuesday);
+		customSchedulegrid.add(scheduleWednesday);
+		customSchedulegrid.add(scheduleThursday);
+		customSchedulegrid.add(scheduleFriday);
+		customSchedulegrid.add(scheduleSaturday);
+		customSchedulegrid.add(scheduleSunday);
+		
+		optionsTab.add(customSchedulegrid);
+		
+		// Now more messages and it's grid
+		let customSchedulegrid2 = new Gtk.Grid ({
+			orientation: Gtk.Orientation.HORIZONTAL,
+			column_spacing: 6,
+			row_spacing: 6 
+		});
+		
+		let scheduleMessage2 = new Gtk.Label ({
+			label: _("At"),
+			halign: Gtk.Align.START,
+		});
+		
+		this._scheduleHourSpin = new Gtk.SpinButton();
+		this._scheduleHourSpin.set_range(0, 23);
+		this._scheduleHourSpin.set_increments(1, 0);
+		this._scheduleHourSpin.set_wrap(true);
+		//this._scheduleHourSpin.set_orientation(Gtk.Orientation.VERTICAL);
+		this._scheduleHourSpin.set_value(0);
+		this._scheduleHourSpin.connect('changed', Lang.bind(this, function() {
+			this._settings.set_int(SETTINGS_HOUR, this._scheduleHourSpin.get_value());
+		}));
+		
+		let scheduleDot = new Gtk.Label ({
+			label: " : ",
+			halign: Gtk.Align.START,
+		});
+		
+		this._scheduleMinutesSpin = new Gtk.SpinButton();
+		this._scheduleMinutesSpin.set_range(0, 59);
+		this._scheduleMinutesSpin.set_increments(1, 0);
+		this._scheduleMinutesSpin.set_wrap(true);
+		//this._scheduleMinutesSpin.set_orientation(Gtk.Orientation.VERTICAL);
+		this._scheduleMinutesSpin.set_value(0);
+		this._scheduleMinutesSpin.connect('changed', Lang.bind(this, function() {
+			this._settings.set_int(SETTINGS_MINUTES, this._scheduleMinutesSpin.get_value());
+		}));
+		
+		customSchedulegrid2.add(scheduleMessage2);
+		customSchedulegrid2.add(this._scheduleHourSpin);
+		customSchedulegrid2.add(scheduleDot);
+		customSchedulegrid2.add(this._scheduleMinutesSpin);
+		
+		optionsTab.add(customSchedulegrid2);
+		
 		// Create notebook widget to hold the tabs and it's labels
 		let notebook = new Gtk.Notebook();
 		
@@ -450,15 +570,10 @@ const SincroDirsSettingsWidget = new GObject.Class({
 		let customRsync = this._settings.get_string(SETTINGS_CUSTOM_RSYNC);
 		let customOptions = this._settings.get_boolean(SETTINGS_CUSTOM_OPTIONS);
 		let groupsList = Gsd.getGroups(this._settings.get_strv(SETTINGS_GROUP_SOURCE_DESTINATION));
+		let schedulerHour = this._settings.get_int(SETTINGS_HOUR);
+		let schedulerMinutes = this._settings.get_int(SETTINGS_MINUTES);
 		
-		this._customEntry.set_text(customRsync);
-		
-		if (customOptions) {
-			this._customOptionsRadio.active = true;
-		} else {
-			this._modifyOptionsRadio.active = true;
-		}
-		
+		// Refresh the folders options
 		this._sourceStore.clear();
 		this._destinationStore.clear();
 		
@@ -479,6 +594,18 @@ const SincroDirsSettingsWidget = new GObject.Class({
 			let destinationFolder = Gsd.getDestinationFolder(this._settings.get_strv(SETTINGS_GROUP_SOURCE_DESTINATION), groupsList[i]);
 			this._destinationStore.set(destinationIter, [Columns.GROUP_NAME, Columns.FOLDER_NAME], [groupsList[i], destinationFolder]);
 		}
+		
+		// Refresh the rsync & scheduler options
+		this._customEntry.set_text(customRsync);
+		
+		if (customOptions) {
+			this._customOptionsRadio.active = true;
+		} else {
+			this._modifyOptionsRadio.active = true;
+		}
+		
+		this._scheduleHourSpin.set_value(schedulerHour);
+		this._scheduleMinutesSpin.set_value(schedulerMinutes);
 	}
 });
 

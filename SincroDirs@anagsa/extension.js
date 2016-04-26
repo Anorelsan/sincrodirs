@@ -29,6 +29,7 @@ const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Widgets = Me.imports.widgets;
 const Convenience = Me.imports.convenience;
 const Gsd = Me.imports.gsd;
+const Scheduler = Me.imports.scheduler;
 
 const Gettext = imports.gettext.domain('sincrodirs');
 const _ = Gettext.gettext;
@@ -42,8 +43,20 @@ const SETTINGS_DELETE = 'delete';
 const SETTINGS_COMPRESS = 'compress';
 const SETTINGS_CUSTOM_RSYNC = 'custom-rsync';
 
+const SETTINGS_MONDAY = 'monday';
+const SETTINGS_TUESDAY = 'tuesday';
+const SETTINGS_WEDNESDAY = 'wednesday';
+const SETTINGS_THURSDAY = 'thursday';
+const SETTINGS_FRIDAY = 'friday';
+const SETTINGS_SATURDAY = 'saturday';
+const SETTINGS_SUNDAY = 'sunday';
+const SETTINGS_HOUR = 'hour';
+const SETTINGS_MINUTES = 'minutes';
+
 let _settings;
 let _indicator;
+let _schedulerUtils;
+let _sincroButtons;
 
 const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 	Name: 'SincroButtons',
@@ -61,11 +74,11 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 		this.actor.add_actor(this.box, {
 			expand: true 
 		});
-		this.box.add_actor(new Widgets.ControlButton("media-playback-start", this._sincroDir).actor);
+		this.box.add_actor(new Widgets.ControlButton("media-playback-start", this.sincroDir).actor);
 		this.box.add_actor(new Widgets.ControlButton("list-add", Widgets.openConfigWidget).actor);
 	},
 	
-	_sincroDir : function() {
+	sincroDir : function() {
 		let enabledGroups = _settings.get_strv(SETTINGS_ENABLED_GROUPS);
 		let groupSourceDestination = _settings.get_strv(SETTINGS_GROUP_SOURCE_DESTINATION);
 		let rsyncPath = GLib.find_program_in_path("rsync");
@@ -150,12 +163,9 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 			Main.notify("SincroDirs",_("rsync not found!"));
 		}
 		
-		let date = new GLib.Date(); // Update the last-sync date after synchro
-		let time = new GLib.TimeVal();
-		GLib.get_current_time(time);
-		date.set_time_val(time);
+		let date = new GLib.DateTime(); // Update the last-sync date after synchro
 		let actualDate = "";
-		actualDate = actualDate.concat(date.get_day());
+		actualDate = actualDate.concat(date.get_day_of_month());
 		actualDate = actualDate.concat("/");
 		actualDate = actualDate.concat(date.get_month());
 		actualDate = actualDate.concat("/");
@@ -248,8 +258,9 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 					this.menu.addMenuItem(new Widgets.LabelWidget(errors[i], "infoText"));
 				}
 			}
+			_sincroButtons = new SincroButtons();
 			this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-			this.menu.addMenuItem(new SincroButtons());
+			this.menu.addMenuItem(_sincroButtons);
 		}
 	},
 	
@@ -301,22 +312,39 @@ function applyChanges() {   // reload the indicator when settings change
 	
 	_indicator.destroy();
 	_indicator = new SincroDirsMenu();
-	Main.panel.addToStatusArea('sincrodirs',_indicator,1,'right');
+	Main.panel.addToStatusArea('sincrodirs', _indicator, 1, 'right');
 }
 
 function init() {
 	_settings = Convenience.getSettings();
 	Convenience.initTranslations();
+	
+	_schedulerUtils = new Scheduler.SchedulerUtils(_settings);
+	if (_schedulerUtils.daysSelected().length > 0) {
+		_schedulerUtils.schedulerTimerInit();
+		_schedulerUtils.setCallback(function() {
+			_sincroButtons.sincroDir();
+			
+			_schedulerUtils.stop();
+			_schedulerUtils.schedulerTimerInit();
+			_schedulerUtils.start();
+			
+			return true;
+		});
+		_schedulerUtils.start();
+	} else {
+		_schedulerUtils.stop();
+	}
 }
 
 function enable() {
 	_indicator = new SincroDirsMenu();
-	Main.panel.addToStatusArea('sincrodirs',_indicator,1,'right');
+	Main.panel.addToStatusArea('sincrodirs', _indicator, 1, 'right');
 	
 	_settings.connect('changed::' + SETTINGS_GROUP_SOURCE_DESTINATION, Lang.bind(this, applyChanges));
 	_settings.connect('changed::' + SETTINGS_ENABLED_GROUPS, Lang.bind(this, applyChanges));
 	_settings.connect('changed::' + SETTINGS_LAST_SYNC, Lang.bind(this, applyChanges));
-	_settings.connect('changed::' + SETTINGS_LAST_ERRORS, Lang.bind(this, applyChanges))
+	_settings.connect('changed::' + SETTINGS_LAST_ERRORS, Lang.bind(this, applyChanges));
 }
 
 function disable() {

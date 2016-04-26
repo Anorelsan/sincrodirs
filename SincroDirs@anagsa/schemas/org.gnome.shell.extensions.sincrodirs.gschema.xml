@@ -40,5 +40,50 @@
 			<summary>Custom options for rsync</summary>
 			<description>Custom options for rsync</description>
 		</key>
+		<key name="monday" type="b">
+			<default>false</default>
+			<summary>Day of the week for scheduling options</summary>
+			<description>Day of the week for scheduling options</description>
+		</key>
+		<key name="tuesday" type="b">
+			<default>false</default>
+			<summary>Day of the week for scheduling options</summary>
+			<description>Day of the week for scheduling options</description>
+		</key>
+		<key name="wednesday" type="b">
+			<default>false</default>
+			<summary>Day of the week for scheduling options</summary>
+			<description>Day of the week for scheduling options</description>
+		</key>
+		<key name="thursday" type="b">
+			<default>false</default>
+			<summary>Day of the week for scheduling options</summary>
+			<description>Day of the week for scheduling options</description>
+		</key>
+		<key name="friday" type="b">
+			<default>false</default>
+			<summary>Day of the week for scheduling options</summary>
+			<description>Day of the week for scheduling options</description>
+		</key>
+		<key name="saturday" type="b">
+			<default>false</default>
+			<summary>Day of the week for scheduling options</summary>
+			<description>Day of the week for scheduling options</description>
+		</key>
+		<key name="sunday" type="b">
+			<default>false</default>
+			<summary>Day of the week for scheduling options</summary>
+			<description>Day of the week for scheduling options</description>
+		</key>
+		<key name="hour" type="i">
+			<default>0</default>
+			<summary>Hour for scheuling options</summary>
+			<description>Hour for scheuling options</description>
+		</key>
+		<key name="minutes" type="i">
+			<default>0</default>
+			<summary>Minutes for scheuling options</summary>
+			<description>Minutes for scheuling options</description>
+		</key>
 	</schema>
 </schemalist>

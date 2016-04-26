@@ -3,7 +3,6 @@
 * Text, buttons etc. for the extension
 **/
 
-
 const St = imports.gi.St;
 const Lang = imports.lang;
 const PopupMenu = imports.ui.popupMenu;
