@@ -43,16 +43,6 @@ const SETTINGS_DELETE = 'delete';
 const SETTINGS_COMPRESS = 'compress';
 const SETTINGS_CUSTOM_RSYNC = 'custom-rsync';
 
-const SETTINGS_MONDAY = 'monday';
-const SETTINGS_TUESDAY = 'tuesday';
-const SETTINGS_WEDNESDAY = 'wednesday';
-const SETTINGS_THURSDAY = 'thursday';
-const SETTINGS_FRIDAY = 'friday';
-const SETTINGS_SATURDAY = 'saturday';
-const SETTINGS_SUNDAY = 'sunday';
-const SETTINGS_HOUR = 'hour';
-const SETTINGS_MINUTES = 'minutes';
-
 let _settings;
 let _indicator;
 let _schedulerUtils;
