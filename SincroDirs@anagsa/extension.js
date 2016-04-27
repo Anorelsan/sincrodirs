@@ -36,6 +36,7 @@ const _ = Gettext.gettext;
 
 const SETTINGS_GROUP_SOURCE_DESTINATION = 'group-source-destination';
 const SETTINGS_ENABLED_GROUPS = 'enabled-groups';
+const SETTINGS_NEXT_SYNC = 'next-sync';
 const SETTINGS_LAST_SYNC = 'last-sync';
 const SETTINGS_LAST_ERRORS = 'last-errors';
 const SETTINGS_CUSTOM_OPTIONS = 'custom-options';
@@ -232,6 +233,13 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 			
 			this._enableGroups();
 			this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+			this.menu.addMenuItem(new Widgets.LabelWidget(_("Next synchronization:"), "infoText"));
+			let nextSync = _settings.get_string(SETTINGS_NEXT_SYNC);
+			if (nextSync == "") {
+				this.menu.addMenuItem(new Widgets.LabelWidget(_("No synchronization scheduled."), "infoText"));
+			} else {
+				this.menu.addMenuItem(new Widgets.LabelWidget(nextSync, "infoText"));
+			}
 			this.menu.addMenuItem(new Widgets.LabelWidget(_("Last synchronization:"), "infoText"));
 			let lastSync = _settings.get_string(SETTINGS_LAST_SYNC);
 			if (lastSync == "") {
@@ -248,8 +256,8 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 					this.menu.addMenuItem(new Widgets.LabelWidget(errors[i], "infoText"));
 				}
 			}
-			_sincroButtons = new SincroButtons();
 			this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+			_sincroButtons = new SincroButtons();
 			this.menu.addMenuItem(_sincroButtons);
 		}
 	},
@@ -310,17 +318,18 @@ function init() {
 	Convenience.initTranslations();
 	
 	_schedulerUtils = new Scheduler.SchedulerUtils(_settings);
-	if (_schedulerUtils.daysSelected().length > 0) {
+	
+	_schedulerUtils.schedulerTimerInit();
+	_schedulerUtils.setCallback(function() {
+		_sincroButtons.sincroDir();
+		
 		_schedulerUtils.schedulerTimerInit();
-		_schedulerUtils.setCallback(function() {
-			_sincroButtons.sincroDir();
-			
-			_schedulerUtils.stop();
-			_schedulerUtils.schedulerTimerInit();
-			_schedulerUtils.start();
-			
-			return true;
-		});
+		_schedulerUtils.start();
+		
+		return true;
+	});
+	
+	if (_schedulerUtils.daysSelected().length > 0) {
 		_schedulerUtils.start();
 	} else {
 		_schedulerUtils.stop();
@@ -333,6 +342,7 @@ function enable() {
 	
 	_settings.connect('changed::' + SETTINGS_GROUP_SOURCE_DESTINATION, Lang.bind(this, applyChanges));
 	_settings.connect('changed::' + SETTINGS_ENABLED_GROUPS, Lang.bind(this, applyChanges));
+	_settings.connect('changed::' + SETTINGS_NEXT_SYNC, Lang.bind(this, applyChanges));
 	_settings.connect('changed::' + SETTINGS_LAST_SYNC, Lang.bind(this, applyChanges));
 	_settings.connect('changed::' + SETTINGS_LAST_ERRORS, Lang.bind(this, applyChanges));
 }

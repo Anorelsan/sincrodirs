@@ -14,6 +14,7 @@ const SETTINGS_SATURDAY = 'saturday';
 const SETTINGS_SUNDAY = 'sunday';
 const SETTINGS_HOUR = 'hour';
 const SETTINGS_MINUTES = 'minutes';
+const SETTINGS_NEXT_SYNC = 'next-sync';
 
 const SchedulerUtils = new Lang.Class({
 	Name: "SchedulerUtils",
@@ -74,52 +75,54 @@ const SchedulerUtils = new Lang.Class({
 		let synchroMinutes = this._settings.get_int(SETTINGS_MINUTES);
 		let minutesLeft = -1;
 		
-		let date = new GLib.DateTime();
-		let actualDay = date.get_day_of_week();
-		let actualHour = date.get_hour();
-		let actualMinutes = date.get_minute();
+		if (synchroDays.length > 0) {
+			let date = new GLib.DateTime();
+			let actualDay = date.get_day_of_week();
+			let actualHour = date.get_hour();
+			let actualMinutes = date.get_minute();
+			
+			// calculate the minutes left for the next synchro, order and returns are important!
+			if (synchroDays.indexOf(actualDay) != -1) {	//first, if we are in the same day
+				if (actualHour < synchroHour) {
+					let hoursLeft = synchroHour - actualHour;
 		
-		// calculate the minutes left for the next synchro, order and returns are important!
-		if (synchroDays.indexOf(actualDay) != -1) {	//first, if we are in the same day
-			if (actualHour < synchroHour) {
-				let hoursLeft = synchroHour - actualHour;
-		
-				minutesLeft = (hoursLeft * 60 - actualMinutes) + synchroMinutes;
+					minutesLeft = (hoursLeft * 60 - actualMinutes) + synchroMinutes;
 
-				return minutesLeft;
-			} else if (actualHour == synchroHour) {
-				if (actualMinutes < synchroMinutes) {
-					minutesLeft = synchroMinutes - actualMinutes;
+					return minutesLeft;
+				} else if (actualHour == synchroHour) {
+					if (actualMinutes < synchroMinutes) {
+						minutesLeft = synchroMinutes - actualMinutes;
+
+						return minutesLeft;
+					}
+				} else {	// same weekday of the next week
+					let hoursLeft = synchroHour - actualHour;
+			
+					minutesLeft = (7 * 24 * 60) + (hoursLeft * 60 - actualMinutes) + synchroMinutes;
 
 					return minutesLeft;
 				}
-			} else {	// same weekday of the next week
-				let hoursLeft = synchroHour - actualHour;
-			
-				minutesLeft = (7 * 24 * 60) + (hoursLeft * 60 - actualMinutes) + synchroMinutes;
-
-				return minutesLeft;
 			}
-		}
 		
-		for (var i = 0; i < synchroDays.length; i++) {	//second, not the same day, but days + 1 of the same week
-			if (synchroDays[i] > actualDay) {
-				let numberDaysBeetween = synchroDays[i] - actualDay;
+			for (var i = 0; i < synchroDays.length; i++) {	//second, not the same day, but days + 1 of the same week
+				if (synchroDays[i] > actualDay) {
+					let numberDaysBeetween = synchroDays[i] - actualDay;
+					let hoursLeft = synchroHour - actualHour;
+			
+					minutesLeft = (numberDaysBeetween * 24 * 60) + (hoursLeft * 60 - actualMinutes) + synchroMinutes;
+
+					return minutesLeft;
+				}
+			}
+		
+			for (var i = 0; i < synchroDays.length; i++) {	//last, if the days + 1 aren't on the left of the week, next week
+				let numberDaysBeetween = 7 - actualDay + synchroDays[i];
 				let hoursLeft = synchroHour - actualHour;
 			
 				minutesLeft = (numberDaysBeetween * 24 * 60) + (hoursLeft * 60 - actualMinutes) + synchroMinutes;
 
 				return minutesLeft;
 			}
-		}
-		
-		for (var i = 0; i < synchroDays.length; i++) {	//last, if the days + 1 aren't on the left of the week, next week
-			let numberDaysBeetween = 7 - actualDay + synchroDays[i];
-			let hoursLeft = synchroHour - actualHour;
-			
-			minutesLeft = (numberDaysBeetween * 24 * 60) + (hoursLeft * 60 - actualMinutes) + synchroMinutes;
-
-			return minutesLeft;
 		}
 		
 		return minutesLeft;
@@ -148,9 +151,10 @@ const SchedulerUtils = new Lang.Class({
 	
 	newSchedulerTimer: function() {
 		let newValue = this.nextSincroScheduleMinutes();
+		
 		if (newValue != -1) {
 			if((this._timeout != newValue) && (newValue >= 1)) {
-				this._timeout = newValue*60000;
+				this._timeout = newValue * 60000;
 				this.start();
 			}
 		} else {
@@ -170,6 +174,19 @@ const SchedulerUtils = new Lang.Class({
 	start: function() {
 		this.stop();
 		this._timerId = GLib.timeout_add(GLib.PRIORITY_DEFAULT,this._timeout, this._callback);
+		
+		// update the next date for synchro for the next synchronization label
+		let date = new GLib.DateTime();
+		let nextDate = date.add_minutes(this._timeout / 60000);
+		let nextSynchro = "";
+	
+		nextSynchro = nextSynchro.concat(nextDate.get_day_of_month());
+		nextSynchro = nextSynchro.concat("/");
+		nextSynchro = nextSynchro.concat(nextDate.get_month());
+		nextSynchro = nextSynchro.concat("/");
+		nextSynchro = nextSynchro.concat(nextDate.get_year());
+	
+		this._settings.set_string(SETTINGS_NEXT_SYNC, nextSynchro);
 	},
 	
 	stop: function() {
@@ -178,5 +195,7 @@ const SchedulerUtils = new Lang.Class({
 			GLib.source_remove(this._timerId);
 			this._timerId = null;
 		}
+		
+		this._settings.set_string(SETTINGS_NEXT_SYNC, "");
 	}
 });

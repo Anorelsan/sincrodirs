@@ -10,6 +10,11 @@
 			<summary>Enabled groups</summary>
 			<description>Contains the groups enabled to make a synchronization</description>
 		</key>
+		<key name="next-sync" type="s">
+			<default>""</default>
+			<summary>Next synchronization</summary>
+			<description>Date of the next synchronization (dd/mm/yyyy)</description>
+		</key>
 		<key name="last-sync" type="s">
 			<default>""</default>
 			<summary>Last synchronization</summary>
