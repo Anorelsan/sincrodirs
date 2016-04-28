@@ -39,7 +39,7 @@ The defaults options for rsync are -rlptq, but you cand modify them and add the 
 
 ![](https://github.com/Khudsa/sincrodirs/blob/master/_screenshots/6.png)
 
-If you have configured the extension, now you can click again on the extension icon to view the groups to synchronize, when the next synchronization will happen (if scheduled), the last synchronization and errors. You can click on the switch button to activate/deactivate that group synchronization. And the play button to synchronize.
+If you have configured the extension, now you can click again on the extension icon to view the groups to synchronize, when the next synchronization will happen (if scheduled), the last synchronization and errors. You can click on the switch button to activate/deactivate that group synchronization and the play button to synchronize.
 
 ![](https://github.com/Khudsa/sincrodirs/blob/master/_screenshots/7.png)
 
