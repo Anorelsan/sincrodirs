@@ -161,6 +161,10 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 		actualDate = actualDate.concat(date.get_month());
 		actualDate = actualDate.concat("/");
 		actualDate = actualDate.concat(date.get_year());
+		actualDate = actualDate.concat(" - ");
+		actualDate = actualDate.concat(date.get_hour());
+		actualDate = actualDate.concat(":");
+		actualDate = actualDate.concat(date.get_minute());
 		_settings.set_string(SETTINGS_LAST_SYNC, actualDate);
 	}
 });
