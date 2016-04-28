@@ -156,6 +156,7 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 		
 		let date = new GLib.DateTime(); // Update the last-sync date after synchro
 		let actualDate = "";
+		
 		actualDate = actualDate.concat(date.get_day_of_month());
 		actualDate = actualDate.concat("/");
 		actualDate = actualDate.concat(date.get_month());
@@ -164,7 +165,9 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 		actualDate = actualDate.concat(" - ");
 		actualDate = actualDate.concat(date.get_hour());
 		actualDate = actualDate.concat(":");
-		actualDate = actualDate.concat(date.get_minute());
+		let minutes = date.get_minute();
+		minutes = (minutes < 9 ) ? "0" + minutes : minutes;
+		actualDate = actualDate.concat(minutes);
 		_settings.set_string(SETTINGS_LAST_SYNC, actualDate);
 	}
 });

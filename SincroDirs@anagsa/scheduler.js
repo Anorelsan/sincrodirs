@@ -188,7 +188,9 @@ const SchedulerUtils = new Lang.Class({
 		nextSynchro = nextSynchro.concat(" - ");
 		nextSynchro = nextSynchro.concat(this._settings.get_int(SETTINGS_HOUR));
 		nextSynchro = nextSynchro.concat(":");
-		nextSynchro = nextSynchro.concat(this._settings.get_int(SETTINGS_MINUTES));
+		let minutes = this._settings.get_int(SETTINGS_MINUTES);
+		minutes = (minutes < 9 ) ? "0" + minutes : minutes;
+		nextSynchro = nextSynchro.concat(minutes);
 	
 		this._settings.set_string(SETTINGS_NEXT_SYNC, nextSynchro);
 	},
