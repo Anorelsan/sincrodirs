@@ -185,6 +185,10 @@ const SchedulerUtils = new Lang.Class({
 		nextSynchro = nextSynchro.concat(nextDate.get_month());
 		nextSynchro = nextSynchro.concat("/");
 		nextSynchro = nextSynchro.concat(nextDate.get_year());
+		nextSynchro = nextSynchro.concat(" - ");
+		nextSynchro = nextSynchro.concat(this._settings.get_int(SETTINGS_HOUR));
+		nextSynchro = nextSynchro.concat(":");
+		nextSynchro = nextSynchro.concat(this._settings.get_int(SETTINGS_MINUTES));
 	
 		this._settings.set_string(SETTINGS_NEXT_SYNC, nextSynchro);
 	},
