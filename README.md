@@ -35,7 +35,7 @@ On the next tab you can modify the default options for rsync and configure when 
 
 ![](https://github.com/Khudsa/sincrodirs/blob/master/_screenshots/5.png)
 
-The defaults options for rsync are -rlptq, but you cand modify them and add the delete or compress options or set a new ones. Warning! Must be correct rsync options string! Also you can schedule the synchronization. You can specify none (no scheduled), one or more days to synchronize at an specific hour.
+The defaults options for rsync are -rlptq, but you can modify them and add the delete or compress options or set a new ones. Warning! Must be correct rsync options string! Also you can schedule the synchronization. You can specify none (no scheduled), one or more days to synchronize at an specific hour.
 
 ![](https://github.com/Khudsa/sincrodirs/blob/master/_screenshots/6.png)
 
