@@ -1,9 +1,15 @@
 # SincroDirs
-Gnome Shell extension for folders synchronization.
+GNOME Shell extension for folders synchronization.
 
 Uses rysnc as a backend.
 
 Thanks to [randwall](https://github.com/rodakorn/randwall) extension, help me a lot to understand how to make an extension.
+
+Install
+-------
+You can install from [GNOME extensions](https://extensions.gnome.org/extension/1067/sincrodirs/) or manually via [GitHub](https://github.com/Khudsa/sincrodirs).
+
+If you want to install it manually, download the zip from GitHub, extract it, copy the SincroDirs@Anagsa folder to $HOME/.local/share/gnome-shell/extensions and then restart the GNOME session.
 
 Features
 --------

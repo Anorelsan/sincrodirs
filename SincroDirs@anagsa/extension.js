@@ -24,6 +24,7 @@ const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const GLib = imports.gi.GLib;
 const Gio = imports.gi.Gio;
+const Animation = imports.ui.animation;
 
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Widgets = Me.imports.widgets;
@@ -44,10 +45,13 @@ const SETTINGS_DELETE = 'delete';
 const SETTINGS_COMPRESS = 'compress';
 const SETTINGS_CUSTOM_RSYNC = 'custom-rsync';
 
+const PANEL_ICON_SIZE = 16;
+
 let _settings;
 let _indicator;
 let _schedulerUtils;
 let _sincroButtons;
+let _spinnerPlay;
 
 const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 	Name: 'SincroButtons',
@@ -80,6 +84,7 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 		if (rsyncPath != null) {	
 			//Start notification
 			Main.notify("SincroDirs",_("Start synchronization"));
+			_sincroButtons.startAnimation();
 			
 			this._totalChilds = 0;
 			this._childsEnded = 0;  //to count childs with childWatch
@@ -135,8 +140,10 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 									let endErrors = _settings.get_strv(SETTINGS_LAST_ERRORS);
 									if (endErrors.length == 0) {
 										Main.notify("SincroDirs",_("Synchronization ended"));
+										_sincroButtons.stopAnimation();
 									} else {
 										Main.notify("SincroDirs",_("Synchronization ended with errors!"));
+										_sincroButtons.stopAnimation();
 									}
 								}
 								
@@ -169,6 +176,20 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 		minutes = (minutes < 9 ) ? "0" + minutes : minutes;
 		actualDate = actualDate.concat(minutes);
 		_settings.set_string(SETTINGS_LAST_SYNC, actualDate);
+	},
+	
+	stopAnimation : function () {
+		if (!_spinnerPlay) {
+			return;
+		}
+
+		_spinnerPlay = false;
+		applyChanges();
+	},
+
+	startAnimation : function () {
+		_spinnerPlay = true;
+		applyChanges();
 	}
 });
 
@@ -212,25 +233,34 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 	Extends: PanelMenu.Button,
 
 	_init : function() {
-		this.parent(0.0,"sincrodirs");
+		this.parent(0.0, "sincrodirs");
 		let hbox = new St.BoxLayout({ 
 			style_class: 'panel-status-menu-box' 
 		});
 		let icon = new St.Icon({ 
 			style_class: 'sincroDirs-icon' 
 		});
-		hbox.add_child(icon);
+		
+		if (_spinnerPlay) { // if start a new synchronization theres a icon to animate...
+			let spinnerIcon = Gio.File.new_for_uri('resource:///org/gnome/shell/theme/process-working.svg');
+			let spinner = new Animation.AnimatedIcon(spinnerIcon, PANEL_ICON_SIZE);
+			hbox.add_actor(spinner.actor);
+			spinner.play();
+			spinner.actor.show();
+		} else {
+			hbox.add_child(icon);
+		}
 		hbox.add_child(PopupMenu.arrowIcon(St.Side.BOTTOM));
 		this.actor.add_actor(hbox);
 		
 		let groupsList = Gsd.getGroups(_settings.get_strv(SETTINGS_GROUP_SOURCE_DESTINATION));
 		if (groupsList.length == 0) {   // if there isn't any folder, messages + config button
-			this.menu.addMenuItem(new Widgets.LabelWidget(_("There's no folders to synchronize!"),"errorText"));
-			this.menu.addMenuItem(new Widgets.LabelWidget(_("Please, add folders in options menu."),"normalText"));
+			this.menu.addMenuItem(new Widgets.LabelWidget(_("There's no folders to synchronize!"), "errorText"));
+			this.menu.addMenuItem(new Widgets.LabelWidget(_("Please, add folders in options menu."), "normalText"));
 			this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 			this.menu.addMenuItem(new ConfigButton());
 		} else {	// if there are groups, list them and put their switch's
-			this.menu.addMenuItem(new Widgets.LabelWidget(_("GROUPS"),"titleText"));
+			this.menu.addMenuItem(new Widgets.LabelWidget(_("GROUPS"), "titleText"));
 			this._groupSwitch = new Array();
 			for (var i = 0; i < groupsList.length; i++) {
 				this._groupSwitch[i] = new PopupMenu.PopupSwitchMenuItem(groupsList[i]);
