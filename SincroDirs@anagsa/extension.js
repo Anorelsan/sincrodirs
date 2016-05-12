@@ -371,6 +371,8 @@ function init() {
 	} else {
 		_schedulerUtils.stop();
 	}
+	
+	_spinnerPlay = false;
 }
 
 function enable() {
