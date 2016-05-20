@@ -28,7 +28,7 @@ const SchedulerUtils = new Lang.Class({
 		this._settings = settings;
 	},
 	
-	daysSelected: function() {
+	daysSelected: function() {	// returns an array with the days selected in number: 1 monday, 2 tuesday etc.
 		let monday = this._settings.get_boolean(SETTINGS_MONDAY);
 		let tuesday = this._settings.get_boolean(SETTINGS_TUESDAY);
 		let wednesday = this._settings.get_boolean(SETTINGS_WEDNESDAY);
@@ -69,7 +69,7 @@ const SchedulerUtils = new Lang.Class({
 		return daysSelected;
 	},
 	
-	nextSincroScheduleMinutes: function() {
+	nextSincroScheduleMinutes: function() {	// returns the next scheduled synchro in minutes
 		let synchroDays = this.daysSelected();
 		let synchroHour = this._settings.get_int(SETTINGS_HOUR);
 		let synchroMinutes = this._settings.get_int(SETTINGS_MINUTES);
@@ -128,7 +128,7 @@ const SchedulerUtils = new Lang.Class({
 		return minutesLeft;
 	},
 	
-	schedulerTimerInit: function() {		// timer function inspired by randwall timer (https://github.com/rodakorn/randwall/)
+	schedulerTimerInit: function() {	// timer function inspired by randwall timer (https://github.com/rodakorn/randwall/)
 		this._timeout = this.nextSincroScheduleMinutes();
 		
 		if (this._timeout == -1) {

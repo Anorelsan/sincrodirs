@@ -259,7 +259,7 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 			this.menu.addMenuItem(new Widgets.LabelWidget(_("Please, add folders in options menu."), "normalText"));
 			this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 			this.menu.addMenuItem(new ConfigButton());
-		} else {	// if there are groups, list them and put their switch's
+		} else {	// if there are groups, list them and put their switches & info
 			this.menu.addMenuItem(new Widgets.LabelWidget(_("GROUPS"), "titleText"));
 			this._groupSwitch = new Array();
 			for (var i = 0; i < groupsList.length; i++) {
@@ -269,7 +269,10 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 			}
 			
 			this.enableGroups();
+			
 			this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+			
+			// Next synchronization label & info
 			this.menu.addMenuItem(new Widgets.LabelWidget(_("Next synchronization:"), "infoText"));
 			let nextSync = _settings.get_string(SETTINGS_NEXT_SYNC);
 			if (nextSync == "") {
@@ -277,6 +280,8 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 			} else {
 				this.menu.addMenuItem(new Widgets.LabelWidget(nextSync, "infoText"));
 			}
+			
+			// Last synchronization label & info
 			this.menu.addMenuItem(new Widgets.LabelWidget(_("Last synchronization:"), "infoText"));
 			let lastSync = _settings.get_string(SETTINGS_LAST_SYNC);
 			if (lastSync == "") {
@@ -284,6 +289,8 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 			} else {
 				this.menu.addMenuItem(new Widgets.LabelWidget(lastSync, "infoText"));
 			}
+			
+			// Last errors label & info
 			this.menu.addMenuItem(new Widgets.LabelWidget(_("Last errors:"), "infoText"));
 			let errors = _settings.get_strv(SETTINGS_LAST_ERRORS);
 			if (errors.length == 0) {
@@ -293,13 +300,16 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 					this.menu.addMenuItem(new Widgets.LabelWidget(errors[i], "infoText"));
 				}
 			}
+			
 			this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+			
+			// And buttons
 			_sincroButtons = new SincroButtons();
 			this.menu.addMenuItem(_sincroButtons);
 		}
 	},
 	
-	enableGroups : function() {
+	enableGroups : function() { // read the enabled_groups setting and activate the corresponding switches
 		let enabledGroups = _settings.get_strv(SETTINGS_ENABLED_GROUPS);
 		let groupsList = Gsd.getGroups(_settings.get_strv(SETTINGS_GROUP_SOURCE_DESTINATION)); 
 		
@@ -312,12 +322,12 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 		}
 	},
 	
-	toogleStatusGroup : function(groupSwitch, state, group) {
+	toogleStatusGroup : function(groupSwitch, state, group) {   // update the enabled_groups settings
 		let enabledGroups = _settings.get_strv(SETTINGS_ENABLED_GROUPS);
 		
-		if (state == true) {
+		if (state == true) {	// add group to the setting
 			enabledGroups.push(group);
-		} else {
+		} else {	// delete the group from the setting
 				let i = enabledGroups.indexOf(group);
 				if (i == 0) {
 					enabledGroups.shift();
@@ -357,7 +367,7 @@ function init() {
 	_schedulerUtils = new Scheduler.SchedulerUtils(_settings);
 	
 	_schedulerUtils.schedulerTimerInit();
-	_schedulerUtils.setCallback(function() {
+	_schedulerUtils.setCallback(function() {	// the callback function called by the timer
 		_sincroButtons.sincroDir();
 		
 		_schedulerUtils.schedulerTimerInit();
