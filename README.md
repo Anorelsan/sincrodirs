@@ -5,12 +5,6 @@ Uses rysnc as a backend.
 
 Thanks to [randwall](https://github.com/rodakorn/randwall) extension, help me a lot to understand how to make an extension.
 
-Install
--------
-You can install from [GNOME extensions](https://extensions.gnome.org/extension/1067/sincrodirs/) or manually via [GitHub](https://github.com/Khudsa/sincrodirs).
-
-If you want to install it manually, download the zip from GitHub, extract it, copy the SincroDirs@Anagsa folder to $HOME/.local/share/gnome-shell/extensions and then restart the GNOME session.
-
 Features
 --------
 * Default options for synchronize are: -rlptq.
@@ -23,9 +17,15 @@ Features
 * Notification support.
 * Available in english and spanish.
 
+Install
+-------
+You can install from [GNOME extensions](https://extensions.gnome.org/extension/1067/sincrodirs/) or manually via [GitHub](https://github.com/Khudsa/sincrodirs).
+
+If you want to install it manually, download the zip from GitHub, extract it, copy the SincroDirs@Anagsa folder to $HOME/.local/share/gnome-shell/extensions and then restart the GNOME session.
+
 Settings
 --------
-The first time the extension is executed needs to be configured. When you click on the folder with arrows icon it displays a message and a '+' button. Click the '+' button to configure the extension and add folders.
+The first time you run the extension it needs to be configured. When you click on the folder with arrows icon it displays a message and a '+' button. Click the '+' button to configure the extension and add folders.
 
 ![](https://github.com/Khudsa/sincrodirs/blob/master/_screenshots/1.png)
 
@@ -45,7 +45,7 @@ The defaults options for rsync are -rlptq, but you can modify them and add the d
 
 ![](https://github.com/Khudsa/sincrodirs/blob/master/_screenshots/6.png)
 
-If you have configured the extension, now you can click again on the extension icon to view the groups to synchronize, when the next synchronization will happen (if scheduled), the last synchronization and errors. You can click on the switch button to activate/deactivate that group synchronization and the play button to synchronize.
+If you have configured the extension, now you can click again on the extension icon to view the groups to synchronize, when the next synchronization will happen (if scheduled), the last synchronization and errors. You can click on the switch button to activate/deactivate that group synchronization and the '►' button to synchronize.
 
 ![](https://github.com/Khudsa/sincrodirs/blob/master/_screenshots/7.png)
 
