@@ -197,14 +197,14 @@ const SincroDirsSettingsWidget = new GObject.Class({
 			icon_size: Gtk.IconSize.SMALL_TOOLBAR });
 		destinationToolbar.get_style_context().add_class(Gtk.STYLE_CLASS_INLINE_TOOLBAR);
 		
-		this.__destinationAddChangeFolderButton = new Gtk.ToolButton({ 
+		this._destinationAddChangeFolderButton = new Gtk.ToolButton({ 
 			icon_name: 'folder-new',
 			label: _("Add/Change folder"),
 			is_important: true
 		});
-		this.__destinationAddChangeFolderButton.connect('clicked', Lang.bind(this, this.destinationAddChangeFolderDialog));
+		this._destinationAddChangeFolderButton.connect('clicked', Lang.bind(this, this.destinationAddChangeFolderDialog));
 		
-		destinationToolbar.add(this.__destinationAddChangeFolderButton);
+		destinationToolbar.add(this._destinationAddChangeFolderButton);
 		
 		// Attach the label & entryGrid to the foldersTab
 		foldersTab.add (destinationLabel);
