@@ -49,7 +49,7 @@ const SincroDirsSettingsWidget = new GObject.Class({
 		this.orientation = Gtk.Orientation.VERTICAL;
 		
 		this._settings = Convenience.getSettings();
-		this._settings.connect('changed', Lang.bind(this, this._refresh));
+		this._settings.connect('changed', Lang.bind(this, this.refresh));
 		
 		// Folders tab
 		let foldersTab = new Gtk.Grid ({
@@ -117,21 +117,21 @@ const SincroDirsSettingsWidget = new GObject.Class({
 			label: _("Add group"),
 			is_important: true
 		});
-		this._sourceAddGroupButton.connect('clicked', Lang.bind(this, this._sourceAddGroupPopover));
+		this._sourceAddGroupButton.connect('clicked', Lang.bind(this, this.sourceAddGroupPopover));
 		
 		let sourceAddButton = new Gtk.ToolButton({ 
 			icon_name: 'folder-new',
 			label: _("Add folder"),
 			is_important: true
 		});
-		sourceAddButton.connect('clicked', Lang.bind(this, this._sourceAddFolderDialog));
+		sourceAddButton.connect('clicked', Lang.bind(this, this.sourceAddFolderDialog));
 		
 		let sourceRemoveButton = new Gtk.ToolButton({ 
 			icon_name: 'edit-delete',
 			label: _("Remove group or folder"),
 			is_important: true
 		});
-		sourceRemoveButton.connect('clicked', Lang.bind(this, this._sourceRemoveDialog));
+		sourceRemoveButton.connect('clicked', Lang.bind(this, this.sourceRemoveDialog));
 		
 		// Add buttons to the toolbar
 		sourceToolbar.add(this._sourceAddGroupButton);
@@ -202,7 +202,7 @@ const SincroDirsSettingsWidget = new GObject.Class({
 			label: _("Add/Change folder"),
 			is_important: true
 		});
-		this.__destinationAddChangeFolderButton.connect('clicked', Lang.bind(this, this._destinationAddChangeFolderDialog));
+		this.__destinationAddChangeFolderButton.connect('clicked', Lang.bind(this, this.destinationAddChangeFolderDialog));
 		
 		destinationToolbar.add(this.__destinationAddChangeFolderButton);
 		
@@ -435,10 +435,10 @@ const SincroDirsSettingsWidget = new GObject.Class({
 		this.add(notebook);
 		
 		// Refresh the windows with the actual settings
-		this._refresh();
+		this.refresh();
 	},
 	
-	_sourceAddGroupPopover: function() {
+	sourceAddGroupPopover: function() {
 		// Create popover, grid to hold the widgets and the widgets
 		this._groupPopover = new Gtk.Popover({
 			relative_to: this._sourceAddGroupButton });
@@ -458,7 +458,7 @@ const SincroDirsSettingsWidget = new GObject.Class({
 		let popAddGroupButton = new Gtk.Button ({
 			label: _("Add") 
 		});
-		popAddGroupButton.connect('clicked', Lang.bind(this, this._addGroup));
+		popAddGroupButton.connect('clicked', Lang.bind(this, this.addGroup));
 		
 		// Add widgets to the grid, and grid to the popover
 		popGrid.add(this._popGroupEntry);
@@ -469,7 +469,7 @@ const SincroDirsSettingsWidget = new GObject.Class({
 		this._groupPopover.show_all();
 	},
 	
-	_addGroup: function() {
+	addGroup: function() {
 		let groupEntry = this._popGroupEntry.get_text();
 		let existsSemicolon = groupEntry.indexOf(";");
 		let existsVerticalBar = groupEntry.indexOf("|");
@@ -487,7 +487,7 @@ const SincroDirsSettingsWidget = new GObject.Class({
 		this._groupPopover.destroy();
 	},
 	
-	_sourceAddFolderDialog: function() {
+	sourceAddFolderDialog: function() {
 		let chooseFolderDialog = new Gtk.FileChooserDialog({
 			title: _("Select folder"),
 			modal: true,
@@ -519,7 +519,7 @@ const SincroDirsSettingsWidget = new GObject.Class({
 		chooseFolderDialog.run();
 	},
 	
-	_sourceRemoveDialog: function() {
+	sourceRemoveDialog: function() {
 		let [any, model, iter] = this._sourceTreeView.get_selection().get_selected();
 		
 		if (any) {
@@ -541,7 +541,7 @@ const SincroDirsSettingsWidget = new GObject.Class({
 		}
 	},
 	
-	_destinationAddChangeFolderDialog: function() {
+	destinationAddChangeFolderDialog: function() {
 		let chooseFolderDialog = new Gtk.FileChooserDialog({
 			title: _("Select folder"),
 			modal: true,
@@ -566,7 +566,7 @@ const SincroDirsSettingsWidget = new GObject.Class({
 		chooseFolderDialog.run();
 	},
 	
-	_refresh: function() {
+	refresh: function() {
 		let customRsync = this._settings.get_string(SETTINGS_CUSTOM_RSYNC);
 		let customOptions = this._settings.get_boolean(SETTINGS_CUSTOM_OPTIONS);
 		let groupsList = Gsd.getGroups(this._settings.get_strv(SETTINGS_GROUP_SOURCE_DESTINATION));

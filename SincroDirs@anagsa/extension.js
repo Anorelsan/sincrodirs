@@ -264,11 +264,11 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 			this._groupSwitch = new Array();
 			for (var i = 0; i < groupsList.length; i++) {
 				this._groupSwitch[i] = new PopupMenu.PopupSwitchMenuItem(groupsList[i]);
-				this._groupSwitch[i].connect('toggled', Lang.bind(this, this._toogleStatusGroup, groupsList[i]));
+				this._groupSwitch[i].connect('toggled', Lang.bind(this, this.toogleStatusGroup, groupsList[i]));
 				this.menu.addMenuItem(this._groupSwitch[i]);
 			}
 			
-			this._enableGroups();
+			this.enableGroups();
 			this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 			this.menu.addMenuItem(new Widgets.LabelWidget(_("Next synchronization:"), "infoText"));
 			let nextSync = _settings.get_string(SETTINGS_NEXT_SYNC);
@@ -299,7 +299,7 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 		}
 	},
 	
-	_enableGroups : function() {
+	enableGroups : function() {
 		let enabledGroups = _settings.get_strv(SETTINGS_ENABLED_GROUPS);
 		let groupsList = Gsd.getGroups(_settings.get_strv(SETTINGS_GROUP_SOURCE_DESTINATION)); 
 		
@@ -312,7 +312,7 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 		}
 	},
 	
-	_toogleStatusGroup : function(groupSwitch, state, group) {
+	toogleStatusGroup : function(groupSwitch, state, group) {
 		let enabledGroups = _settings.get_strv(SETTINGS_ENABLED_GROUPS);
 		
 		if (state == true) {
