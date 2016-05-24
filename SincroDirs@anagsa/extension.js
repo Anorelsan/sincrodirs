@@ -25,6 +25,8 @@ const PopupMenu = imports.ui.popupMenu;
 const GLib = imports.gi.GLib;
 const Gio = imports.gi.Gio;
 const Animation = imports.ui.animation;
+const ExtensionUtils = imports.misc.extensionUtils;
+const Config = imports.misc.config;
 
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Widgets = Me.imports.widgets;
@@ -242,11 +244,19 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 		});
 		
 		if (_spinnerPlay) { // if start a new synchronization theres a icon to animate...
-			let spinnerIcon = Gio.File.new_for_uri('resource:///org/gnome/shell/theme/process-working.svg');
-			let spinner = new Animation.AnimatedIcon(spinnerIcon, PANEL_ICON_SIZE);
-			hbox.add_actor(spinner.actor);
-			spinner.play();
-			spinner.actor.show();
+			if (ExtensionUtils.versionCheck(['3.14'], Config.PACKAGE_VERSION)) {	// workaround: static icon for 3.14, animation don't work me well...
+				let workIcon = new St.Icon({
+					icon_name: 'media-playlist-repeat',
+					icon_size: PANEL_ICON_SIZE
+				});
+				hbox.add_child(workIcon);
+			} else {
+				let spinnerIcon = Gio.File.new_for_uri('resource:///org/gnome/shell/theme/process-working.svg');
+				spinner = new Animation.AnimatedIcon(spinnerIcon, PANEL_ICON_SIZE);
+				hbox.add_actor(spinner.actor);
+				spinner.play();
+				spinner.actor.show();
+			}
 		} else {
 			hbox.add_child(icon);
 		}
