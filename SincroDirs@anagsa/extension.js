@@ -154,6 +154,11 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 							}, this._totalChilds));
 						}
 					}
+				} else {	//if there isn't a destination...
+					if (enabledGroups.length == 1) { //and only one group to synchronize...
+						Main.notify("SincroDirs",_("Synchronization ended"));   //there's nothing to synchronize
+						_sincroButtons.stopAnimation();
+					}
 				}
 			}
 		} else {
