@@ -1,0 +1,181 @@
+# German translations for sincrodir package
+# Copyright (C) 2016 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the sincrodir package.
+# Peter Eisenmann <p3732@gmx.de>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: SincroDirs\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-25 15:39+0200\n"
+"PO-Revision-Date: 2016-05-26 01:58+0200\n"
+"Language-Team: German\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.7.1\n"
+"Last-Translator: Peter Eisenmann <p3732@gmx.de>\n"
+"Language: de\n"
+"X-Poedit-Basepath: ../../..\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: extension.js:82
+msgid "Start synchronization"
+msgstr "Synchronisation starten\t\t"
+
+#: extension.js:137
+msgid "Synchronization ended"
+msgstr "Synchronisation beendet"
+
+#: extension.js:139
+msgid "Synchronization ended with errors!"
+msgstr "Die Synchronisation endete mit Fehlermeldungen!"
+
+#: extension.js:151 extension.js:154
+msgid "rsync not found!"
+msgstr "rsync konnte nicht gefunden werden!"
+
+#: extension.js:221
+msgid "There's no folders to synchronize!"
+msgstr "Keine Ordner zu synchronisieren!"
+
+#: extension.js:222
+msgid "Please, add folders in options menu."
+msgstr "Füge Ordner über die Einstellungen hinzu."
+
+#: extension.js:226
+msgid "GROUPS"
+msgstr "GRUPPEN"
+
+#: extension.js:236
+msgid "Next synchronization:"
+msgstr "Nächste Synchronisation:"
+
+#: extension.js:239
+msgid "No synchronization scheduled."
+msgstr "Keine Synchronisationen geplant."
+
+#: extension.js:243
+msgid "Last synchronization:"
+msgstr "Letzte Synchronisation:"
+
+#: extension.js:246
+msgid "No synchronization yet!"
+msgstr "Noch keine Synchronisationen!"
+
+#: extension.js:250
+msgid "Last errors:"
+msgstr "Letzte Fehlermeldungen:"
+
+#: extension.js:253
+msgid "No errors"
+msgstr "Keine Fehlermeldungen"
+
+#: prefs.js:64
+msgid "Source"
+msgstr "Von"
+
+#: prefs.js:85 prefs.js:170
+msgid "Groups"
+msgstr "Gruppen"
+
+#: prefs.js:100 prefs.js:185 prefs.js:424
+msgid "Folders"
+msgstr "Ordner"
+
+#: prefs.js:117
+msgid "Add group"
+msgstr "Gruppe hinzufügen"
+
+#: prefs.js:124
+msgid "Add folder"
+msgstr "Ordner hinzufügen"
+
+#: prefs.js:131
+msgid "Remove group or folder"
+msgstr "Ordner oder Gruppe löschen"
+
+#: prefs.js:149
+msgid "Destination"
+msgstr "Nach"
+
+#: prefs.js:202
+msgid "Add/Change folder"
+msgstr "Ordner hinzufügen/ändern"
+
+#: prefs.js:224
+msgid "Rsync options"
+msgstr "rsync Optionen"
+
+#: prefs.js:233
+msgid "Modify rsync options"
+msgstr "rsync Optionen modifizieren"
+
+#: prefs.js:249
+msgid "Delete"
+msgstr "Löschen"
+
+#: prefs.js:254
+msgid "Compress"
+msgstr "Komprimieren"
+
+#: prefs.js:266
+msgid "Custom rsync options"
+msgstr "Eigene rsync Optionen  setzen"
+
+#: prefs.js:288
+msgid "Set"
+msgstr "Anwenden"
+
+#: prefs.js:311
+msgid "Schedule options"
+msgstr "Zeitplanung"
+
+#: prefs.js:319
+msgid "Repeat every:"
+msgstr "Wiederhole immer..."
+
+#: prefs.js:325
+msgid "Monday"
+msgstr "Montag"
+
+#: prefs.js:330
+msgid "Tuesday"
+msgstr "Dienstag"
+
+#: prefs.js:335
+msgid "Wednesday"
+msgstr "Mittwoch"
+
+#: prefs.js:340
+msgid "Thursday"
+msgstr "Donnerstag"
+
+#: prefs.js:345
+msgid "Friday"
+msgstr "Freitag"
+
+#: prefs.js:350
+msgid "Saturday"
+msgstr "Samstag"
+
+#: prefs.js:355
+msgid "Sunday"
+msgstr "Sonntag"
+
+#: prefs.js:384
+msgid "At"
+msgstr "Um"
+
+#: prefs.js:428
+msgid "Options"
+msgstr "Optionen"
+
+#: prefs.js:459
+msgid "Add"
+msgstr "Hinzufügen"
+
+#: prefs.js:492 prefs.js:546
+msgid "Select folder"
+msgstr "Ordner auswählen"
