@@ -15,7 +15,7 @@ Features
 * Synchronize a group of folders to a common destination.
 * Scheduled synchronization.
 * Notification support.
-* Available in english and spanish.
+* Available in english, spanish and german (thanks to [P3732](https://github.com/p3732)).
 
 Install
 -------
