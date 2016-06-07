@@ -262,7 +262,7 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 				hbox.add_child(workIcon);
 			} else {
 				let spinnerIcon = Gio.File.new_for_uri('resource:///org/gnome/shell/theme/process-working.svg');
-				spinner = new Animation.AnimatedIcon(spinnerIcon, PANEL_ICON_SIZE);
+				let spinner = new Animation.AnimatedIcon(spinnerIcon, PANEL_ICON_SIZE);
 				hbox.add_actor(spinner.actor);
 				spinner.play();
 				spinner.actor.show();
