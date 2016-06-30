@@ -1,7 +1,7 @@
 # SincroDirs
 GNOME Shell extension for folders synchronization.
 
-Uses rysnc as a backend.
+Uses rsync as a backend.
 
 Thanks to [randwall](https://github.com/rodakorn/randwall) extension, help me a lot to understand how to make an extension.
 
