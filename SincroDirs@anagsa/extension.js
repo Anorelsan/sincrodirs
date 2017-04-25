@@ -94,77 +94,82 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 			this._errorReader = new Array();
 			this._childWatch = new Array(); //arrays to track the childs and the error stream
 			
-			for (var i = 0; i < enabledGroups.length; i++) {
-				let groupSources = Gsd.getSourceFolders(groupSourceDestination, enabledGroups[i]);
-				let groupDestination = Gsd.getDestinationFolder(groupSourceDestination, enabledGroups[i]);
+			if (enabledGroups.length != 0) {	// check if there is some enabled group to synchronize !!!
+				for (var i = 0; i < enabledGroups.length; i++) {
+					let groupSources = Gsd.getSourceFolders(groupSourceDestination, enabledGroups[i]);
+					let groupDestination = Gsd.getDestinationFolder(groupSourceDestination, enabledGroups[i]);
 			
-				if (groupDestination != "") {   // some destination ...
-					for (var j = 0; j < groupSources.length; j++) {
-						if (groupSources[j] != "") {	// and some sources ...
-							this._totalChilds ++;   // counts the number of children, but also is a index to indentify them
+					if (groupDestination != "") {   // some destination ...
+						for (var j = 0; j < groupSources.length; j++) {
+							if (groupSources[j] != "") {	// and some sources ...
+								this._totalChilds ++;   // counts the number of children, but also is a index to indentify them
 							
-							let rsyncOptions = '-rlptq';	// rsync options and ...
-							let customOptions = _settings.get_boolean(SETTINGS_CUSTOM_OPTIONS);
+								let rsyncOptions = '-rlptq';	// rsync options and ...
+								let customOptions = _settings.get_boolean(SETTINGS_CUSTOM_OPTIONS);
 							
-							if (customOptions) {	// custom options
-								rsyncOptions = _settings.get_string(SETTINGS_CUSTOM_RSYNC);
-							} else {
-								let deleteOption = _settings.get_boolean(SETTINGS_DELETE);
-								let compressOption = _settings.get_boolean(SETTINGS_COMPRESS);
+								if (customOptions) {	// custom options
+									rsyncOptions = _settings.get_string(SETTINGS_CUSTOM_RSYNC);
+								} else {
+									let deleteOption = _settings.get_boolean(SETTINGS_DELETE);
+									let compressOption = _settings.get_boolean(SETTINGS_COMPRESS);
 								
-								if (compressOption) {   // first the options with a letter
-									rsyncOptions = rsyncOptions.concat('z');
-								}
-								if (deleteOption) { // last the options with word
-									rsyncOptions = rsyncOptions.concat(' --delete');
-								}
-							}   // now we have a correct rsync options string
-							
-							let argv = [];  // an array for spawn_async with...
-							argv.push(rsyncPath);   //rsync path...
-							argv = argv.concat(rsyncOptions.split(" "));	//and all it's options
-							argv.push(groupSources[j]);
-							argv.push(groupDestination);
-							
-							let [res, pid, in_fd, out_fd, err_fd] = GLib.spawn_async_with_pipes(null, argv, null, GLib.SpawnFlags.DO_NOT_REAP_CHILD, null);
-						
-							this._errorReader[this._totalChilds] = new Gio.DataInputStream({
-								base_stream: new Gio.UnixInputStream({fd: err_fd})
-							});
-							
-							this._errorReader[this._totalChilds].read_line_async(0, null, readError);
-							
-							this._childWatch[this._totalChilds] = GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, Lang.bind(this, function(childWatch, state, nChild) {
-								this._childsEnded++;
-								
-								if (this._totalChilds == this._childsEnded) {
-									//End notification
-									let endErrors = _settings.get_strv(SETTINGS_LAST_ERRORS);
-									if (endErrors.length == 0) {
-										Main.notify("SincroDirs",_("Synchronization ended"));
-										_sincroButtons.stopAnimation();
-									} else {
-										Main.notify("SincroDirs",_("Synchronization ended with errors!"));
-										_sincroButtons.stopAnimation();
+									if (compressOption) {   // first the options with a letter
+										rsyncOptions = rsyncOptions.concat('z');
 									}
-								}
+									if (deleteOption) { // last the options with word
+										rsyncOptions = rsyncOptions.concat(' --delete');
+									}
+								}   // now we have a correct rsync options string
+							
+								let argv = [];  // an array for spawn_async with...
+								argv.push(rsyncPath);   //rsync path...
+								argv = argv.concat(rsyncOptions.split(" "));	//and all it's options
+								argv.push(groupSources[j]);
+								argv.push(groupDestination);
+							
+								let [res, pid, in_fd, out_fd, err_fd] = GLib.spawn_async_with_pipes(null, argv, null, GLib.SpawnFlags.DO_NOT_REAP_CHILD, null);
+						
+								this._errorReader[this._totalChilds] = new Gio.DataInputStream({
+									base_stream: new Gio.UnixInputStream({fd: err_fd})
+								});
+							
+								this._errorReader[this._totalChilds].read_line_async(0, null, readError);
+							
+								this._childWatch[this._totalChilds] = GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, Lang.bind(this, function(childWatch, state, nChild) {
+									this._childsEnded++;
 								
-								GLib.source_remove(this._childWatch[nChild]);
-								this._errorReader[nChild].close(null);
-							}, this._totalChilds));
-						} else {	// if there isn't a source...
-							if (enabledGroups.length == 1 && groupSources.length == 1) {	// and only one group to synchronize...
-								Main.notify("SincroDirs",_("Synchronization ended"));   // there's nothing to synchronize
-								_sincroButtons.stopAnimation();
+									if (this._totalChilds == this._childsEnded) {
+										//End notification
+										let endErrors = _settings.get_strv(SETTINGS_LAST_ERRORS);
+										if (endErrors.length == 0) {
+											Main.notify("SincroDirs",_("Synchronization ended"));
+											_sincroButtons.stopAnimation();
+										} else {
+											Main.notify("SincroDirs",_("Synchronization ended with errors!"));
+											_sincroButtons.stopAnimation();
+										}
+									}
+								
+									GLib.source_remove(this._childWatch[nChild]);
+									this._errorReader[nChild].close(null);
+								}, this._totalChilds));
+							} else {	// if there isn't a source...
+								if (enabledGroups.length == 1 && groupSources.length == 1) {	// and only one group to synchronize...
+									Main.notify("SincroDirs",_("Synchronization ended"));   // there's nothing to synchronize
+									_sincroButtons.stopAnimation();
+								}
 							}
 						}
-					}
-				} else {	// if there isn't a destination...
-					if (enabledGroups.length == 1) { // and only one group to synchronize...
-						Main.notify("SincroDirs",_("Synchronization ended"));   // there's nothing to synchronize
-						_sincroButtons.stopAnimation();
+					} else {	// if there isn't a destination...
+						if (enabledGroups.length == 1) { // and only one group to synchronize...
+							Main.notify("SincroDirs",_("Synchronization ended"));   // there's nothing to synchronize
+							_sincroButtons.stopAnimation();
+						}
 					}
 				}
+			} else {
+				Main.notify("SincroDirs",_("Synchronization ended"));   // no enabled group to synchronize
+				_sincroButtons.stopAnimation();
 			}
 		} else {
 			errors.push(_("rsync not found!"));
