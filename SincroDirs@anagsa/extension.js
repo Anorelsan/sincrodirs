@@ -73,7 +73,7 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 		});
 		this.box.add_actor(new Widgets.ControlButton("media-playback-start", this.sincroDir).actor);
 		this.box.add_actor(new Widgets.ControlButton("list-add", Widgets.openConfigWidget).actor);
-		this.box.add_actor(new Widgets.ControlButton("edit-clear", this.clearLogs).actor);
+		this.box.add_actor(new Widgets.ControlButton("edit-clear", this.clearLastErrorLogs).actor);
 	},
 	
 	sincroDir : function() {
@@ -210,7 +210,7 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 		applyChanges();
 	},
 	
-	clearLogs : function () {
+	clearLastErrorLogs : function () {
 		let errors = [];
 		
 		_settings.set_strv(SETTINGS_LAST_ERRORS, errors);
