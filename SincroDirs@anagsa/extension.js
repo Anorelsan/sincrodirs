@@ -73,6 +73,7 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 		});
 		this.box.add_actor(new Widgets.ControlButton("media-playback-start", this.sincroDir).actor);
 		this.box.add_actor(new Widgets.ControlButton("list-add", Widgets.openConfigWidget).actor);
+		this.box.add_actor(new Widgets.ControlButton("edit-clear", this.clearLogs).actor);
 	},
 	
 	sincroDir : function() {
@@ -207,6 +208,12 @@ const SincroButtons = new Lang.Class({  //if there is folders, the buttons
 	startAnimation : function () {
 		_spinnerPlay = true;
 		applyChanges();
+	},
+	
+	clearLogs : function () {
+		let errors = [];
+		
+		_settings.set_strv(SETTINGS_LAST_ERRORS, errors);
 	}
 });
 
@@ -297,6 +304,12 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 			
 			this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 			
+			// Buttons
+			_sincroButtons = new SincroButtons();
+			this.menu.addMenuItem(_sincroButtons);
+			
+			this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+			
 			// Next synchronization label & info
 			this.menu.addMenuItem(new Widgets.LabelWidget(_("Next synchronization:"), "infoText"));
 			let nextSync = _settings.get_string(SETTINGS_NEXT_SYNC);
@@ -325,12 +338,6 @@ const SincroDirsMenu = new Lang.Class({ //the main menu
 					this.menu.addMenuItem(new Widgets.LabelWidget(errors[i], "infoText"));
 				}
 			}
-			
-			this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-			
-			// And buttons
-			_sincroButtons = new SincroButtons();
-			this.menu.addMenuItem(_sincroButtons);
 		}
 	},
 	
