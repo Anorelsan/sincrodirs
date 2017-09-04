@@ -1,8 +1,8 @@
 {
-    "shell-version": ["3.14","3.16","3.18","3.20","3.22"],
+    "shell-version": ["3.14","3.16","3.18","3.20","3.22","3.24"],
     "uuid": "SincroDirs@anagsa",
     "name": "SincroDirs",
-    "url": "https://github.com/Khudsa/sincrodirs",
+    "url": "https://github.com/Anorelsan/sincrodirs",
     "settings-schema": "org.gnome.shell.extensions.sincrodirs",
     "gettext-domain" : "sincrodirs",
     "description": "Folders synchronization"
